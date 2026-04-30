@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Optic Read-O-Meter icon">
+  <defs>
+    <linearGradient id="slate" x1="32" y1="20" x2="224" y2="236" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1F2937"/>
+      <stop offset="1" stop-color="#0B1220"/>
+    </linearGradient>
+    <linearGradient id="emerald" x1="58" y1="52" x2="204" y2="214" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6EE7B7"/>
+      <stop offset=".56" stop-color="#10B981"/>
+      <stop offset="1" stop-color="#047857"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="54" fill="url(#slate)"/>
+  <path d="M64 178c23-16 45-19 64-9 19-10 41-7 64 9V91c-22-11-43-10-64 5-21-15-42-16-64-5v87Z" fill="#D1FAE5"/>
+  <path d="M64 178c23-16 45-19 64-9V96c-21-15-42-16-64-5v87Z" fill="#ECFDF5"/>
+  <path d="M128 96v73" fill="none" stroke="#065F46" stroke-width="6" stroke-linecap="round"/>
+  <path d="M64 178c23-16 45-19 64-9 19-10 41-7 64 9" fill="none" stroke="url(#emerald)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M58 178c26 18 49 22 70 13 21 9 44 5 70-13" fill="none" stroke="#10B981" stroke-width="12" stroke-linecap="round"/>
+  <path d="M71 82a76 76 0 0 1 114 0" fill="none" stroke="url(#emerald)" stroke-width="18" stroke-linecap="round"/>
+  <path d="M128 44v18" stroke="#6EE7B7" stroke-width="12" stroke-linecap="round"/>
+  <path d="M88 89l-9-14M168 89l9-14" stroke="#D1FAE5" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="128" cy="93" r="16" fill="#0B1220" stroke="#10B981" stroke-width="10"/>
+  <path d="M128 93l38-28" stroke="#D1FAE5" stroke-width="10" stroke-linecap="round"/>
+</svg>

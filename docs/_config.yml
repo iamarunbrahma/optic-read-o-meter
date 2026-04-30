@@ -1,0 +1,18 @@
+# Jekyll config for the Optic Read-O-Meter landing page.
+# Built by GitHub Pages from /docs and served at the project subpath
+# under the parent arunbrahma.com user site.
+
+title: "Optic Read-O-Meter"
+description: "A reading-time badge for WordPress posts."
+url: "https://arunbrahma.com"
+baseurl: "/optic-read-o-meter"
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - DEPLOYMENT.md
+  - README.md
+
+plugins:
+  - jekyll-seo-tag

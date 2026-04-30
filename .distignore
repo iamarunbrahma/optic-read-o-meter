@@ -1,0 +1,13 @@
+.git
+.github
+.gitignore
+.gitattributes
+.distignore
+.editorconfig
+.wordpress-org
+docs
+node_modules
+tests
+*.log
+*.swp
+.DS_Store

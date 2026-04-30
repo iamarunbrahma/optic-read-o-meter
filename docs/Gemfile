@@ -1,0 +1,8 @@
+source "https://rubygems.org"
+
+# Mirrors the gem set GitHub Pages uses for built-in Jekyll builds.
+gem "github-pages", group: :jekyll_plugins
+
+group :jekyll_plugins do
+  gem "jekyll-seo-tag"
+end

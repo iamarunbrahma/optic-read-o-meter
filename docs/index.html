@@ -1,0 +1,484 @@
+---
+layout: null
+title: "Optic Read-O-Meter: Reading Time Badge for WordPress"
+description: "A clean, customisable reading-time badge for WordPress posts. Five styles, four icons, your colours, no tracking."
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ page.title }}</title>
+<meta name="description" content="{{ page.description }}">
+<meta name="theme-color" content="#1F2937">
+
+<link rel="icon" type="image/svg+xml" href="{{ '/assets/favicon.svg' | relative_url }}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/favicon-32x32.png' | relative_url }}">
+<link rel="icon" type="image/png" sizes="16x16" href="{{ '/assets/favicon-16x16.png' | relative_url }}">
+<link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/apple-touch-icon.png' | relative_url }}">
+
+<meta property="og:title" content="{{ page.title }}">
+<meta property="og:description" content="A small, customisable reading-time badge for WordPress single posts.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://arunbrahma.com/optic-read-o-meter/">
+<meta property="og:image" content="https://arunbrahma.com/optic-read-o-meter/assets/banner-1544x500.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<style>
+  :root {
+    --slate-900: #0B1220;
+    --slate-800: #1F2937;
+    --slate-700: #374151;
+    --slate-300: #CBD5E1;
+    --slate-200: #E5E7EB;
+    --slate-100: #F3F4F6;
+    --slate-50:  #F9FAFB;
+    --green-100: #D1FAE5;
+    --green-300: #6EE7B7;
+    --green-400: #34D399;
+    --green-500: #10B981;
+    --green-700: #047857;
+    --green-800: #065F46;
+    --bg:        #FAFAF7;
+    --text:      #111827;
+    --muted:     #6B7280;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--green-700); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
+
+  /* Hero */
+  .hero {
+    background:
+      radial-gradient(circle at 18% 50%, rgba(16, 185, 129, 0.10) 0%, rgba(16, 185, 129, 0) 38%),
+      linear-gradient(135deg, var(--slate-800) 0%, var(--slate-900) 100%);
+    color: #F8FAFC;
+    padding: 96px 0 88px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+  }
+  .hero-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 48px;
+    align-items: center;
+    position: relative;
+  }
+  .hero-icon {
+    width: 200px; height: 200px;
+    border-radius: 40px;
+    background: var(--slate-800);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 30px 60px rgba(0,0,0,0.45);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .hero-icon img { width: 200px; height: 200px; display: block; }
+  h1.wordmark {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+    margin: 0 0 12px;
+    color: #FFF;
+    font-weight: 800;
+  }
+  h1.wordmark .brand {
+    font-size: 60px;
+    letter-spacing: 0;
+  }
+  h1.wordmark .accent {
+    font-size: 44px;
+    letter-spacing: 0;
+    color: var(--green-500);
+    font-weight: 700;
+    margin-top: 4px;
+  }
+  .hero p.tagline {
+    font-size: 22px;
+    color: var(--slate-300);
+    margin: 0 0 28px;
+    max-width: 600px;
+  }
+  .badges-demo {
+    display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 32px;
+  }
+  .demo-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 18px;
+    background: var(--green-100); color: var(--green-800);
+    border-radius: 999px; font-size: 14px; font-weight: 500;
+  }
+  .demo-pill svg { width: 14px; height: 14px; }
+  .demo-pill.outline {
+    background: transparent;
+    color: var(--green-300);
+    border: 1px solid var(--green-300);
+  }
+  .demo-pill.dark {
+    background: rgba(255,255,255,0.06);
+    color: #F8FAFC;
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 6px;
+  }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 14px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: transform .12s ease;
+  }
+  .btn:hover { text-decoration: none; transform: translateY(-1px); }
+  .btn-primary {
+    background: var(--green-500);
+    color: #0B2018;
+  }
+  .btn-secondary {
+    background: rgba(255,255,255,0.08);
+    color: #F8FAFC;
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+
+  /* Sections */
+  section.body-section { padding: 88px 0; }
+  section.body-section.alt { background: #FFFFFF; }
+  h2 {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin: 0 0 16px;
+    color: var(--slate-900);
+  }
+  .lede {
+    font-size: 19px;
+    color: var(--muted);
+    margin: 0 0 48px;
+    max-width: 720px;
+  }
+
+  /* Features grid */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  .feature {
+    padding: 28px 26px;
+    border-radius: 14px;
+    border: 1px solid var(--slate-200);
+    background: #FFF;
+  }
+  .feature .icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: var(--green-100);
+    color: var(--green-700);
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+  }
+  .feature .icon svg { width: 22px; height: 22px; }
+  .feature h3 {
+    margin: 0 0 8px;
+    font-size: 17px;
+    color: var(--slate-900);
+    font-weight: 600;
+  }
+  .feature p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 15px;
+  }
+
+  /* Style showcase */
+  .styles-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  .style-card {
+    padding: 32px 28px;
+    border-radius: 14px;
+    border: 1px solid var(--slate-200);
+    background: #FFFFFF;
+  }
+  .style-card .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .style-card .body-mock {
+    margin-top: 16px;
+    height: 6px;
+    border-radius: 3px;
+    background: #F1F0EE;
+  }
+  .style-card .body-mock.short { width: 70%; margin-top: 10px; }
+
+  /* Code block */
+  .code-block {
+    background: var(--slate-900);
+    color: #E5E7EB;
+    border-radius: 12px;
+    padding: 22px 24px;
+    font-family: ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-x: auto;
+  }
+  .code-block .comment { color: #94A3B8; }
+  .code-block .key     { color: var(--green-400); }
+  .code-block .str     { color: #FCD34D; }
+
+  .install-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+    margin-bottom: 40px;
+  }
+  .step-card {
+    padding: 28px;
+    border-radius: 14px;
+    background: #FFFFFF;
+    border: 1px solid var(--slate-200);
+  }
+  .step-card h3 { margin: 0 0 12px; color: var(--slate-900); font-size: 18px; }
+  .step-card ol { padding-left: 18px; margin: 0; color: var(--muted); }
+  .step-card li { margin-bottom: 6px; }
+
+  /* Footer */
+  footer {
+    background: var(--slate-900);
+    color: var(--slate-300);
+    padding: 48px 0;
+    font-size: 14px;
+  }
+  footer .row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+    align-items: center;
+  }
+  footer a { color: var(--green-400); }
+  footer .links { display: flex; gap: 24px; flex-wrap: wrap; }
+
+  @media (max-width: 800px) {
+    .hero { padding: 64px 0 56px; }
+    .hero-row { grid-template-columns: 120px 1fr; gap: 28px; }
+    .hero-icon { width: 120px; height: 120px; border-radius: 24px; }
+    .hero-icon img { width: 120px; height: 120px; }
+    h1.wordmark .brand { font-size: 40px; }
+    h1.wordmark .accent { font-size: 28px; }
+    .hero p.tagline { font-size: 17px; }
+    h2 { font-size: 28px; }
+    .features, .styles-grid, .install-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container hero-row">
+    <div class="hero-icon"><img src="{{ '/assets/apple-touch-icon.png' | relative_url }}" alt=""></div>
+    <div>
+      <h1 class="wordmark"><span class="brand">Optic</span><span class="accent">Read-O-Meter</span></h1>
+      <p class="tagline">A clean, customisable reading-time badge for WordPress single posts. Five styles, your colours, your wording, no tracking.</p>
+      <div class="badges-demo">
+        <span class="demo-pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          3 min read
+        </span>
+        <span class="demo-pill outline">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          About 5 minutes
+        </span>
+        <span class="demo-pill dark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+          7 min read
+        </span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://wordpress.org/plugins/optic-read-o-meter/">Get from WordPress.org</a>
+        <a class="btn btn-secondary" href="https://github.com/iamarunbrahma/optic-read-o-meter">View on GitHub</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="body-section">
+  <div class="container">
+    <h2>What it does, in one sentence.</h2>
+    <p class="lede">Counts the words in a post, divides by reading speed, and prepends a small &ldquo;3 min read&rdquo; badge above the content. That&rsquo;s the whole plugin.</p>
+
+    <div class="features">
+      <div class="feature">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <h3>Zero configuration</h3>
+        <p>Activate and your single posts get a tasteful badge above the content. Done.</p>
+      </div>
+      <div class="feature">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+        <h3>Five styles included</h3>
+        <p>Pill, minimal, dark, outline, or no styling at all. Switch with one dropdown.</p>
+      </div>
+      <div class="feature">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="13" r="3"/><path d="M19 11l3 3-3 3"/><path d="M5 13l-3-3 3-3"/></svg></div>
+        <h3>Your colours</h3>
+        <p>Two WordPress color pickers for text and background. Hex codes accepted.</p>
+      </div>
+      <div class="feature">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 4 20 4 20 8"/><line x1="14" y1="10" x2="20" y2="4"/><polyline points="20 16 20 20 16 20"/><line x1="14" y1="14" x2="20" y2="20"/><polyline points="8 20 4 20 4 16"/><line x1="10" y1="14" x2="4" y2="20"/><polyline points="4 8 4 4 8 4"/><line x1="10" y1="10" x2="4" y2="4"/></svg></div>
+        <h3>Your wording</h3>
+        <p>&ldquo;3 min read&rdquo;, &ldquo;About 5 minutes&rdquo;, or whatever you like. Custom template field.</p>
+      </div>
+      <div class="feature">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+        <h3>Shortcode + filters</h3>
+        <p>Use <code>[optrom_reading_time]</code> anywhere. Hook <code>optrom_words_per_minute</code> and <code>optrom_label</code> for full control.</p>
+      </div>
+      <div class="feature">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4-8-12a8 8 0 0116 0c0 8-8 12-8 12z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <h3>No tracking, no CDN</h3>
+        <p>No external HTTP, no third-party libraries, no analytics. Plain PHP and CSS.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="body-section alt">
+  <div class="container">
+    <h2>Five styles, two-click switch.</h2>
+    <p class="lede">Match the badge to your theme without writing a line of CSS.</p>
+
+    <div class="styles-grid">
+      <div class="style-card">
+        <p class="label">Pill</p>
+        <span class="demo-pill" style="font-size:14px;">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          3 min read
+        </span>
+        <div class="body-mock"></div>
+        <div class="body-mock short"></div>
+      </div>
+      <div class="style-card">
+        <p class="label">Minimal</p>
+        <span style="display:inline-flex;align-items:center;gap:8px;color:#4B5563;font-size:14px;opacity:.85;">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 010 8h-1"/><path d="M3 8h14v9a4 4 0 01-4 4H7a4 4 0 01-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
+          About 5 minutes
+        </span>
+        <div class="body-mock"></div>
+        <div class="body-mock short"></div>
+      </div>
+      <div class="style-card">
+        <p class="label">Dark</p>
+        <span style="display:inline-flex;align-items:center;gap:8px;background:#1F2937;color:#F8FAFC;padding:9px 16px;border-radius:6px;font-size:14px;font-weight:500;">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+          7 min read
+        </span>
+        <div class="body-mock"></div>
+        <div class="body-mock short"></div>
+      </div>
+      <div class="style-card">
+        <p class="label">Outline</p>
+        <span style="display:inline-flex;align-items:center;gap:8px;border:1px solid #047857;color:#047857;padding:8px 16px;border-radius:6px;font-size:14px;font-weight:500;">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          2 min read
+        </span>
+        <div class="body-mock"></div>
+        <div class="body-mock short"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="body-section">
+  <div class="container">
+    <h2>Get it in under a minute.</h2>
+    <p class="lede">Two ways. Pick whichever you have hands on.</p>
+
+    <div class="install-grid">
+      <div class="step-card">
+        <h3>From WordPress.org</h3>
+        <ol>
+          <li>Go to <strong>Plugins &rarr; Add New</strong>.</li>
+          <li>Search for <em>Optic Read-O-Meter</em>.</li>
+          <li>Click <strong>Install</strong>, then <strong>Activate</strong>.</li>
+          <li>Visit <strong>Settings &rarr; Optic Read-O-Meter</strong> if you want to tweak.</li>
+        </ol>
+      </div>
+      <div class="step-card">
+        <h3>Manual zip</h3>
+        <ol>
+          <li>Download the latest <code>optic-read-o-meter.zip</code>.</li>
+          <li>WordPress &rarr; <strong>Plugins &rarr; Add New &rarr; Upload Plugin</strong>.</li>
+          <li>Pick the zip, click <strong>Install Now</strong>.</li>
+          <li>Activate. Done.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="body-section alt">
+  <div class="container">
+    <h2>For developers.</h2>
+    <p class="lede">Two filters and a shortcode &mdash; all you need to ship reading time anywhere.</p>
+
+    <div class="code-block">
+<span class="comment">// Render the label as text:</span>
+[optrom_reading_time]
+
+<span class="comment">// Render the styled badge:</span>
+[optrom_reading_time <span class="key">format</span>=<span class="str">"badge"</span>]
+
+<span class="comment">// Custom template (the %s becomes the minute count):</span>
+[optrom_reading_time <span class="key">template</span>=<span class="str">"About %s"</span>]
+
+<span class="comment">// PHP filter: change reading speed for technical posts:</span>
+add_filter( <span class="str">'optrom_words_per_minute'</span>, <span class="key">function</span>( $wpm, $post ) {
+  <span class="key">return</span> has_category( <span class="str">'technical'</span>, $post ) ? 150 : $wpm;
+}, 10, 2 );
+
+<span class="comment">// PHP filter: replace the entire label string:</span>
+add_filter( <span class="str">'optrom_label'</span>, <span class="key">function</span>( $label, $minutes, $post ) {
+  <span class="key">return</span> sprintf( <span class="str">'☕ %d min read'</span>, $minutes );
+}, 10, 3 );
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container row">
+    <div>
+      &copy; 2026 Arun Brahma &middot; Released under <a href="https://www.gnu.org/licenses/gpl-2.0.html">GPLv2 or later</a>.
+    </div>
+    <div class="links">
+      <a href="https://wordpress.org/plugins/optic-read-o-meter/">WordPress.org</a>
+      <a href="https://github.com/iamarunbrahma/optic-read-o-meter">GitHub</a>
+      <a href="https://arunbrahma.com">arunbrahma.com</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
