@@ -442,9 +442,9 @@ description: "A clean, customisable reading-time badge for WordPress posts. Five
 <section class="body-section alt">
   <div class="container">
     <h2>For developers.</h2>
-    <p class="lede">Two filters and a shortcode &mdash; all you need to ship reading time anywhere.</p>
+    <p class="lede">Two filters and a shortcode, all you need to ship reading time anywhere.</p>
 
-    <div class="code-block">
+    <pre class="code-block">
 <span class="comment">// Render the label as text:</span>
 [optrom_reading_time]
 
@@ -463,7 +463,7 @@ add_filter( <span class="str">'optrom_words_per_minute'</span>, <span class="key
 add_filter( <span class="str">'optrom_label'</span>, <span class="key">function</span>( $label, $minutes, $post ) {
   <span class="key">return</span> sprintf( <span class="str">'☕ %d min read'</span>, $minutes );
 }, 10, 3 );
-    </div>
+    </pre>
   </div>
 </section>
 
