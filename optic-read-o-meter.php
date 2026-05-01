@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       Optic Read-O-Meter
- * Plugin URI:        https://arunbrahma.com/optic-read-o-meter
+ * Plugin URI:        https://arunbrahma.com/optic-read-o-meter/
  * Description:       Adds an estimated reading time above post content with style / color / position options, a [optrom_reading_time] shortcode, and a Gutenberg block.
  * Version:           1.0.0
  * Requires at least: 6.3
