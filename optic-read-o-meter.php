@@ -257,7 +257,7 @@ function optrom_build_badge( $post = null ) {
 		'<p class="optrom-reading-time %1$s" aria-label="%2$s">%3$s<span class="optrom-text">%4$s</span></p>',
 		esc_attr( $style_class ),
 		esc_attr( $label ),
-		$icon_html, // SVG is hard-coded, safe.
+		wp_kses( $icon_html, optrom_svg_allowed_html() ),
 		esc_html( $label )
 	);
 }
@@ -394,7 +394,7 @@ function optrom_enqueue_block_editor_assets() {
 	$handle = 'optic-read-o-meter-block-editor';
 	wp_register_style( $handle, false, array(), OPTROM_VERSION );
 	wp_enqueue_style( $handle );
-	wp_add_inline_style( $handle, optrom_build_css() );
+	wp_add_inline_style( $handle, wp_strip_all_tags( optrom_build_css() ) );
 }
 add_action( 'enqueue_block_editor_assets', 'optrom_enqueue_block_editor_assets' );
 
@@ -430,7 +430,7 @@ function optrom_enqueue_styles() {
 	$handle = 'optic-read-o-meter';
 	wp_register_style( $handle, false, array(), OPTROM_VERSION );
 	wp_enqueue_style( $handle );
-	wp_add_inline_style( $handle, optrom_build_css() );
+	wp_add_inline_style( $handle, wp_strip_all_tags( optrom_build_css() ) );
 }
 add_action( 'wp_enqueue_scripts', 'optrom_enqueue_styles' );
 
@@ -756,23 +756,29 @@ function optrom_enqueue_admin_assets( $hook ) {
 		return;
 	}
 	wp_enqueue_style( 'wp-color-picker' );
-	wp_enqueue_script( 'wp-color-picker' );
 
 	// Settings-page chrome + frontend badge styles share one handle.
 	$preview_handle = 'optic-read-o-meter-preview';
 	wp_register_style( $preview_handle, false, array(), OPTROM_VERSION );
 	wp_enqueue_style( $preview_handle );
-	wp_add_inline_style( $preview_handle, optrom_build_css() . optrom_admin_css() );
+	wp_add_inline_style( $preview_handle, wp_strip_all_tags( optrom_build_css() . optrom_admin_css() ) );
 
-	// Attach our data + JS to wp-color-picker's handle so they ride its dependency
-	// chain (jQuery, iris). Plain data only; icons are cloned from a <template>
-	// in the page, so JS never builds HTML from a string.
+	// Settings-page JS lives in assets/admin.js. Depending on wp-color-picker
+	// pulls jQuery + iris into the dependency chain. Data is attached 'before'
+	// so window.optromAdmin is defined when the script runs.
+	$admin_handle = 'optic-read-o-meter-admin';
+	wp_enqueue_script(
+		$admin_handle,
+		plugins_url( 'assets/admin.js', __FILE__ ),
+		array( 'wp-color-picker' ),
+		OPTROM_VERSION,
+		true
+	);
 	$data = array(
 		'presets'  => optrom_color_presets(),
 		'defaults' => optrom_defaults(),
 	);
-	wp_add_inline_script( 'wp-color-picker', 'window.optromAdmin = ' . wp_json_encode( $data ) . ';', 'before' );
-	wp_add_inline_script( 'wp-color-picker', optrom_admin_js() );
+	wp_add_inline_script( $admin_handle, 'window.optromAdmin = ' . wp_json_encode( $data ) . ';', 'before' );
 }
 add_action( 'admin_enqueue_scripts', 'optrom_enqueue_admin_assets' );
 
@@ -801,139 +807,6 @@ function optrom_admin_css() {
 .optrom-actions .button-link{color:#646970;text-decoration:underline;}
 .optrom-actions .button-link:hover{color:#2271b1;}
 ';
-}
-
-/**
- * Settings-page JS: wpColorPicker init, live preview, palette swatch clicks,
- * reset-to-defaults. Vanilla DOM where possible; jQuery only for color picker.
- *
- * Icons are cloned from a server-rendered <template> in the page (never built
- * from a string), so we don't need to ship raw SVG markup through JS.
- */
-function optrom_admin_js() {
-	return <<<'JS'
-( function( $ ) {
-	$( function() {
-		var data = window.optromAdmin || {};
-		var defaults = data.defaults || {};
-
-		var form = document.getElementById( 'optrom-form' );
-		var preview = document.getElementById( 'optrom-preview-badge' );
-		var iconHost = document.getElementById( 'optrom-icon-templates' );
-		if ( ! form || ! preview || ! iconHost ) return;
-		var iconSlot = preview.querySelector( '.optrom-icon-slot' );
-		var textSlot = preview.querySelector( '.optrom-text' );
-
-		// Cache one cloneable Element per icon key from the <template>.
-		var iconNodes = {};
-		var srcRoot = iconHost.content || iconHost;
-		srcRoot.querySelectorAll( '[data-icon]' ).forEach( function( el ) {
-			iconNodes[ el.dataset.icon ] = el;
-		} );
-
-		function field( name ) {
-			return form.querySelector( '[name="optrom_settings[' + name + ']"]' );
-		}
-		function val( name, fallback ) {
-			var el = field( name );
-			return el && el.value !== '' ? el.value : ( fallback || '' );
-		}
-
-		function setIcon( name ) {
-			while ( iconSlot.firstChild ) iconSlot.removeChild( iconSlot.firstChild );
-			var src = iconNodes[ name ];
-			if ( ! src ) return;
-			// Clone the wrapper's children (the SVG, if any). Wrapper itself stays in the template.
-			for ( var i = 0; i < src.childNodes.length; i++ ) {
-				iconSlot.appendChild( src.childNodes[ i ].cloneNode( true ) );
-			}
-		}
-
-		function syncSwatchActiveState() {
-			var color = val( 'color', '' ).toLowerCase();
-			var bg = val( 'bg', '' ).toLowerCase();
-			document.querySelectorAll( '.optrom-palette-swatch' ).forEach( function( btn ) {
-				var match = btn.dataset.color.toLowerCase() === color && btn.dataset.bg.toLowerCase() === bg;
-				btn.classList.toggle( 'is-active', match );
-			} );
-		}
-
-		function updatePreview() {
-			var style = val( 'style', 'pill' );
-			preview.className = 'optrom-reading-time optrom-style-' + style;
-
-			var color = val( 'color', defaults.color || '#065F46' );
-			var bg = val( 'bg', defaults.bg || '#D1FAE5' );
-			preview.style.setProperty( '--optrom-color', color );
-			preview.style.setProperty( '--optrom-bg', bg );
-
-			setIcon( val( 'icon', 'clock' ) );
-
-			var singular = val( 'template', defaults.template || '%s min read' );
-			var plural = val( 'template_plural', '' );
-			var tpl = ( plural && plural.indexOf( '%s' ) !== -1 ) ? plural : singular;
-			if ( ! tpl || tpl.indexOf( '%s' ) === -1 ) tpl = '%s min read';
-			var label = tpl.replace( '%s', '3' );
-			textSlot.textContent = label;
-			preview.setAttribute( 'aria-label', label );
-
-			syncSwatchActiveState();
-		}
-
-		// wpColorPicker: the only place jQuery is required.
-		$( '.optrom-color-field' ).wpColorPicker( {
-			change: function() { setTimeout( updatePreview, 30 ); },
-			clear:  function() { setTimeout( updatePreview, 30 ); }
-		} );
-
-		form.addEventListener( 'input', updatePreview );
-		form.addEventListener( 'change', updatePreview );
-
-		document.querySelectorAll( '.optrom-palette-swatch' ).forEach( function( btn ) {
-			btn.addEventListener( 'click', function() {
-				$( '#optrom_color' ).wpColorPicker( 'color', btn.dataset.color );
-				$( '#optrom_bg' ).wpColorPicker( 'color', btn.dataset.bg );
-				setTimeout( updatePreview, 30 );
-			} );
-		} );
-
-		var resetBtn = document.getElementById( 'optrom-reset-btn' );
-		if ( resetBtn ) {
-			resetBtn.addEventListener( 'click', function() {
-				function set( name, value ) {
-					var el = field( name );
-					if ( ! el ) return;
-					if ( el.type === 'checkbox' ) {
-						el.checked = !! value;
-					} else {
-						el.value = value;
-					}
-				}
-				set( 'wpm', defaults.wpm );
-				set( 'count_images', defaults.count_images );
-				set( 'seconds_per_image', defaults.seconds_per_image );
-				set( 'min_words', defaults.min_words );
-				set( 'style', defaults.style );
-				set( 'icon', defaults.icon );
-				set( 'position', defaults.position );
-				set( 'template', defaults.template );
-				set( 'template_plural', defaults.template_plural );
-
-				var defaultPostTypes = defaults.post_types || [];
-				document.querySelectorAll( 'input[name="optrom_settings[post_types][]"]' ).forEach( function( cb ) {
-					cb.checked = defaultPostTypes.indexOf( cb.value ) !== -1;
-				} );
-
-				$( '#optrom_color' ).wpColorPicker( 'color', defaults.color );
-				$( '#optrom_bg' ).wpColorPicker( 'color', defaults.bg );
-				setTimeout( updatePreview, 30 );
-			} );
-		}
-
-		updatePreview();
-	} );
-} )( jQuery );
-JS;
 }
 
 /* -------------------------------------------------------------------------
@@ -996,7 +869,7 @@ function optrom_save_meta_box( $post_id ) {
 		delete_post_meta( $post_id, OPTROM_META_DISABLED );
 	}
 
-	$override = isset( $_POST['optrom_meta_override'] ) ? (int) $_POST['optrom_meta_override'] : 0;
+	$override = isset( $_POST['optrom_meta_override'] ) ? absint( wp_unslash( $_POST['optrom_meta_override'] ) ) : 0;
 	if ( $override > 0 && $override <= 999 ) {
 		update_post_meta( $post_id, OPTROM_META_OVERRIDE, $override );
 	} else {
