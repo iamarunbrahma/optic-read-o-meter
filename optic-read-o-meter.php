@@ -394,7 +394,9 @@ function optrom_enqueue_block_editor_assets() {
 	$handle = 'optic-read-o-meter-block-editor';
 	wp_register_style( $handle, false, array(), OPTROM_VERSION );
 	wp_enqueue_style( $handle );
-	wp_add_inline_style( $handle, wp_strip_all_tags( optrom_build_css() ) );
+	// optrom_build_css() returns CSS built from hardcoded literals plus hex
+	// colors already escaped via esc_attr() — safe to add as inline style.
+	wp_add_inline_style( $handle, optrom_build_css() );
 }
 add_action( 'enqueue_block_editor_assets', 'optrom_enqueue_block_editor_assets' );
 
@@ -413,7 +415,7 @@ function optrom_build_css() {
 	}
 
 	return '
-.optrom-reading-time{--optrom-color:' . $color . ';--optrom-bg:' . $bg . ';display:inline-flex;align-items:center;gap:.4em;margin:0 0 1em;font-size:.85em;line-height:1;color:var(--optrom-color);}
+.optrom-reading-time{--optrom-color:' . esc_attr( $color ) . ';--optrom-bg:' . esc_attr( $bg ) . ';display:inline-flex;align-items:center;gap:.4em;margin:0 0 1em;font-size:.85em;line-height:1;color:var(--optrom-color);}
 .optrom-reading-time .optrom-icon{flex:none;}
 .optrom-style-pill{padding:.35em .7em;background:var(--optrom-bg);border-radius:999px;}
 .optrom-style-minimal{padding:0;background:transparent;opacity:.75;}
@@ -430,7 +432,7 @@ function optrom_enqueue_styles() {
 	$handle = 'optic-read-o-meter';
 	wp_register_style( $handle, false, array(), OPTROM_VERSION );
 	wp_enqueue_style( $handle );
-	wp_add_inline_style( $handle, wp_strip_all_tags( optrom_build_css() ) );
+	wp_add_inline_style( $handle, optrom_build_css() );
 }
 add_action( 'wp_enqueue_scripts', 'optrom_enqueue_styles' );
 
@@ -761,7 +763,7 @@ function optrom_enqueue_admin_assets( $hook ) {
 	$preview_handle = 'optic-read-o-meter-preview';
 	wp_register_style( $preview_handle, false, array(), OPTROM_VERSION );
 	wp_enqueue_style( $preview_handle );
-	wp_add_inline_style( $preview_handle, wp_strip_all_tags( optrom_build_css() . optrom_admin_css() ) );
+	wp_add_inline_style( $preview_handle, optrom_build_css() . optrom_admin_css() );
 
 	// Settings-page JS lives in assets/admin.js. Depending on wp-color-picker
 	// pulls jQuery + iris into the dependency chain. Data is attached 'before'
