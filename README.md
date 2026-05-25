@@ -4,6 +4,8 @@ A small WordPress plugin that drops an "X min read" line above every post. Same 
 
 That's the whole thing. Activate the plugin and the badge shows up. Tweak it from Settings, Optic Read-O-Meter if you want.
 
+**Links:** [WordPress.org plugin page](https://wordpress.org/plugins/optic-read-o-meter/) (with an in-browser live preview) · [Project site](https://arunbrahma.com/optic-read-o-meter/)
+
 ## Install
 
 Plugins, Add New, search "Optic Read-O-Meter", install, activate.
