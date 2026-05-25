@@ -72,9 +72,12 @@ No. No tracking, no analytics, no external requests.
 
 == Screenshots ==
 
-1. Settings page with the live preview at the top.
-2. The badge sitting above a single post.
-3. The five styles available: pill, minimal, dark, outline, none.
+1. The reading-time badge above a post, Pill style with the Clock icon.
+2. The settings page: reading speed, display, appearance, and wording, with a live preview.
+3. Appearance options: badge style, icon, and seven one-click color palettes.
+4. The Reading Time block in the editor, with badge or plain-text output.
+5. A different look: Dark style with the Coffee icon.
+6. The [optrom_reading_time] shortcode, rendered inline anywhere.
 
 == Changelog ==
 
