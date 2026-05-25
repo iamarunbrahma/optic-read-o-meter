@@ -1,0 +1,24 @@
+{
+    "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+    "landingPage": "/the-quiet-power-of-a-calm-morning/",
+    "preferredVersions": {
+        "php": "8.2",
+        "wp": "latest"
+    },
+    "phpExtensionBundles": [
+        "kitchen-sink"
+    ],
+    "login": true,
+    "steps": [
+        {
+            "step": "setSiteOptions",
+            "options": {
+                "blogname": "Optic Read-O-Meter Demo"
+            }
+        },
+        {
+            "step": "runPHP",
+            "code": "<?php\nrequire_once '/wordpress/wp-load.php';\n$slug = 'the-quiet-power-of-a-calm-morning';\nif ( ! get_page_by_path( $slug, OBJECT, 'post' ) ) {\n    wp_insert_post( array(\n        'post_title'   => 'The Quiet Power of a Calm Morning',\n        'post_name'    => $slug,\n        'post_status'  => 'publish',\n        'post_author'  => 1,\n        'post_content' => '<!-- wp:paragraph --><p>A clear reading-time estimate answers one quiet question before a visitor commits a single minute: how much attention will this article ask of me? It is a small courtesy, and small courtesies are what make a blog feel considered rather than rushed.</p><!-- /wp:paragraph --><!-- wp:paragraph --><p>Most readers decide whether to stay within the first few seconds. A short, honest label near the title removes the guesswork. It tells them this is a three-minute read, not a thirty-minute one, and lets them choose to settle in or save it for later.</p><!-- /wp:paragraph --><!-- wp:heading --><h2 class=\"wp-block-heading\">Why an estimate beats a word count</h2><!-- /wp:heading --><!-- wp:paragraph --><p>A raw word count means little to most people. Few of us think in thousands of words, but almost all of us think in minutes. Translating length into time is the difference between a number and a decision.</p><!-- /wp:paragraph --><!-- wp:paragraph --><p>The math is unglamorous and that is the point. Count the words, divide by a sensible reading speed, round to something human. Two hundred words per minute is the steady newspaper average, and it holds up well across casual writing.</p><!-- /wp:paragraph --><!-- wp:heading --><h2 class=\"wp-block-heading\">Images take time too</h2><!-- /wp:heading --><!-- wp:paragraph --><p>Words are not the whole story. A reader lingers on images, charts, and pull quotes, and a fair estimate accounts for that pause. Adding a few seconds per image keeps the label honest on visual posts.</p><!-- /wp:paragraph --><!-- wp:paragraph --><p>None of this should shout. The estimate is a guide, not a headline. Kept compact, calm, and aware of the theme around it, it reads as part of the post instead of a widget bolted on top.</p><!-- /wp:paragraph --><!-- wp:paragraph --><p>Do that, and the reading-time badge stops being decoration. It becomes a quiet promise kept between writer and reader, made the moment the page loads.</p><!-- /wp:paragraph -->',\n    ) );\n}\nglobal $wp_rewrite;\n$wp_rewrite->set_permalink_structure( '/%postname%/' );\n$wp_rewrite->flush_rules( true );\n"
+        }
+    ]
+}
