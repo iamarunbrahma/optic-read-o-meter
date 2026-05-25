@@ -10,7 +10,7 @@ description: "A clean, customisable reading-time badge for WordPress posts. Five
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ page.title }}</title>
 <meta name="description" content="{{ page.description }}">
-<meta name="theme-color" content="#1F2937">
+<meta name="theme-color" content="#ffffff">
 
 <link rel="icon" type="image/svg+xml" href="{{ '/assets/favicon.svg' | relative_url }}">
 <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/favicon-32x32.png' | relative_url }}">
@@ -26,457 +26,360 @@ description: "A clean, customisable reading-time badge for WordPress posts. Five
 
 <style>
   :root {
+    --ink:    #0B1220;
+    --ink-2:  #3F4A5A;
+    --ink-3:  #6B7686;
+    --line:   #ECEDEF;
+    --line-2: #E2E4E8;
+    --bg:     #FFFFFF;
+    --bg-soft:#FAFAF8;
+    --em:     #059669;
+    --em-700: #047857;
+    --em-800: #065F46;
+    --em-bg:  #ECFDF5;
+    --em-100: #D1FAE5;
     --slate-900: #0B1220;
-    --slate-800: #1F2937;
-    --slate-700: #374151;
-    --slate-300: #CBD5E1;
-    --slate-200: #E5E7EB;
-    --slate-100: #F3F4F6;
-    --slate-50:  #F9FAFB;
-    --green-100: #D1FAE5;
-    --green-300: #6EE7B7;
-    --green-400: #34D399;
-    --green-500: #10B981;
-    --green-700: #047857;
-    --green-800: #065F46;
-    --bg:        #FAFAF7;
-    --text:      #111827;
-    --muted:     #6B7280;
+    --radius: 16px;
+    --radius-sm: 12px;
+    --shadow-sm: 0 1px 2px rgba(11,18,32,.05), 0 1px 1px rgba(11,18,32,.03);
+    --shadow-lg: 0 28px 64px -28px rgba(11,18,32,.26), 0 10px 28px -16px rgba(11,18,32,.12);
+    --maxw: 1080px;
   }
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   html, body { margin: 0; padding: 0; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: var(--ink-2);
     background: var(--bg);
-    line-height: 1.6;
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
-  a { color: var(--green-700); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  .container { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
+  a { color: var(--em-700); text-decoration: none; }
+  a:hover { color: var(--em); }
+  img { max-width: 100%; display: block; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+  .eyebrow {
+    font-size: 12px; font-weight: 700; letter-spacing: 1.4px;
+    text-transform: uppercase; color: var(--em-700);
+  }
+  h1, h2, h3 { color: var(--ink); }
+
+  /* Nav */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,.82);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .brand { display: flex; align-items: center; gap: 11px; }
+  .brand img { width: 30px; height: 30px; border-radius: 8px; }
+  .brand b { color: var(--ink); font-weight: 700; font-size: 15.5px; letter-spacing: -.2px; }
+  .nav-links { display: flex; align-items: center; gap: 28px; }
+  .nav-links a { color: var(--ink-2); font-size: 14.5px; font-weight: 500; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta {
+    background: var(--ink); color: #fff !important;
+    padding: 8px 16px; border-radius: 9px; font-size: 14px; font-weight: 600;
+  }
+  .nav-cta:hover { background: #1c2636; }
+  @media (max-width: 720px) { .nav-links .hide-sm { display: none; } }
 
   /* Hero */
-  .hero {
-    background:
-      radial-gradient(circle at 18% 50%, rgba(16, 185, 129, 0.10) 0%, rgba(16, 185, 129, 0) 38%),
-      linear-gradient(135deg, var(--slate-800) 0%, var(--slate-900) 100%);
-    color: #F8FAFC;
-    padding: 96px 0 88px;
-    position: relative;
-    overflow: hidden;
-  }
+  .hero { padding: 84px 0 64px; text-align: center; position: relative; overflow: hidden; }
   .hero::before {
-    content: '';
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-    background-size: 48px 48px;
+    content: ''; position: absolute; left: 50%; top: -120px; transform: translateX(-50%);
+    width: 720px; height: 720px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(16,185,129,.10) 0%, rgba(16,185,129,0) 62%);
     pointer-events: none;
   }
-  .hero-row {
-    display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 48px;
-    align-items: center;
-    position: relative;
+  .hero .wrap { position: relative; }
+  .hero h1 {
+    font-size: 58px; line-height: 1.04; font-weight: 800; letter-spacing: -1.6px;
+    margin: 18px auto 0; max-width: 760px;
   }
-  .hero-icon {
-    width: 200px; height: 200px;
-    border-radius: 40px;
-    background: var(--slate-800);
-    box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 30px 60px rgba(0,0,0,0.45);
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
+  .hero h1 .grad { color: var(--em); }
+  .hero .sub {
+    font-size: 19.5px; color: var(--ink-3); margin: 22px auto 0; max-width: 600px;
   }
-  .hero-icon img { width: 200px; height: 200px; display: block; }
-  h1.wordmark {
-    display: flex;
-    flex-direction: column;
-    line-height: 1;
-    margin: 0 0 12px;
-    color: #FFF;
-    font-weight: 800;
+  .pills { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 30px 0 0; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 8px 15px; border-radius: 999px; font-size: 13.5px; font-weight: 500;
+    background: var(--em-100); color: var(--em-800);
   }
-  h1.wordmark .brand {
-    font-size: 60px;
-    letter-spacing: 0;
-  }
-  h1.wordmark .accent {
-    font-size: 44px;
-    letter-spacing: 0;
-    color: var(--green-500);
-    font-weight: 700;
-    margin-top: 4px;
-  }
-  .hero p.tagline {
-    font-size: 22px;
-    color: var(--slate-300);
-    margin: 0 0 28px;
-    max-width: 600px;
-  }
-  .badges-demo {
-    display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 32px;
-  }
-  .demo-pill {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 9px 18px;
-    background: var(--green-100); color: var(--green-800);
-    border-radius: 999px; font-size: 14px; font-weight: 500;
-  }
-  .demo-pill svg { width: 14px; height: 14px; }
-  .demo-pill.outline {
-    background: transparent;
-    color: var(--green-300);
-    border: 1px solid var(--green-300);
-  }
-  .demo-pill.dark {
-    background: rgba(255,255,255,0.06);
-    color: #F8FAFC;
-    border: 1px solid rgba(255,255,255,0.10);
-    border-radius: 6px;
-  }
-  .cta-row { display: flex; flex-wrap: wrap; gap: 14px; }
+  .pill svg { width: 13px; height: 13px; }
+  .pill.outline { background: transparent; color: var(--em-700); border: 1px solid var(--em-100); }
+  .pill.dark { background: var(--slate-900); color: #F1F5F9; border-radius: 7px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 13px; justify-content: center; margin: 34px 0 0; }
   .btn {
-    display: inline-flex; align-items: center; gap: 10px;
-    padding: 14px 24px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 15px;
-    transition: transform .12s ease;
+    display: inline-flex; align-items: center; gap: 9px;
+    padding: 13px 24px; border-radius: 11px; font-weight: 600; font-size: 15px;
+    transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
   }
-  .btn:hover { text-decoration: none; transform: translateY(-1px); }
-  .btn-primary {
-    background: var(--green-500);
-    color: #0B2018;
+  .btn svg { width: 17px; height: 17px; }
+  .btn-primary { background: var(--em); color: #fff !important; box-shadow: 0 8px 20px -8px rgba(5,150,105,.6); }
+  .btn-primary:hover { background: var(--em-700); transform: translateY(-1px); }
+  .btn-ghost { background: #fff; color: var(--ink) !important; border: 1px solid var(--line-2); }
+  .btn-ghost:hover { border-color: #cbd2db; transform: translateY(-1px); }
+  .hero .tryline { margin: 18px 0 0; font-size: 14.5px; color: var(--ink-3); }
+
+  /* Hero screenshot */
+  .shot-hero {
+    margin: 56px auto 0; max-width: 940px;
+    border-radius: var(--radius); border: 1px solid var(--line-2);
+    box-shadow: var(--shadow-lg); overflow: hidden; background: #fff;
   }
-  .btn-secondary {
-    background: rgba(255,255,255,0.08);
-    color: #F8FAFC;
-    border: 1px solid rgba(255,255,255,0.12);
-  }
+  .shot-hero img { width: 100%; }
 
   /* Sections */
-  section.body-section { padding: 88px 0; }
-  section.body-section.alt { background: #FFFFFF; }
-  h2 {
-    font-size: 36px;
-    font-weight: 700;
-    letter-spacing: -1px;
-    margin: 0 0 16px;
-    color: var(--slate-900);
-  }
-  .lede {
-    font-size: 19px;
-    color: var(--muted);
-    margin: 0 0 48px;
-    max-width: 720px;
-  }
+  section { padding: 88px 0; }
+  section.soft { background: var(--bg-soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .sec-head { max-width: 640px; margin: 0 0 48px; }
+  .sec-head.center { margin-left: auto; margin-right: auto; text-align: center; }
+  h2 { font-size: 36px; font-weight: 800; letter-spacing: -1.1px; margin: 12px 0 0; }
+  .sec-head p { font-size: 18px; color: var(--ink-3); margin: 14px 0 0; }
 
-  /* Features grid */
-  .features {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 28px;
-  }
+  /* Features */
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
   .feature {
-    padding: 28px 26px;
-    border-radius: 14px;
-    border: 1px solid var(--slate-200);
-    background: #FFF;
+    padding: 26px 24px; border-radius: var(--radius); border: 1px solid var(--line);
+    background: #fff; box-shadow: var(--shadow-sm);
   }
-  .feature .icon {
-    width: 44px; height: 44px;
-    border-radius: 10px;
-    background: var(--green-100);
-    color: var(--green-700);
-    display: inline-flex; align-items: center; justify-content: center;
-    margin-bottom: 16px;
+  .feature .fi {
+    width: 42px; height: 42px; border-radius: 11px;
+    background: var(--em-bg); color: var(--em-700);
+    display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px;
   }
-  .feature .icon svg { width: 22px; height: 22px; }
-  .feature h3 {
-    margin: 0 0 8px;
-    font-size: 17px;
-    color: var(--slate-900);
-    font-weight: 600;
-  }
-  .feature p {
-    margin: 0;
-    color: var(--muted);
-    font-size: 15px;
+  .feature .fi svg { width: 21px; height: 21px; }
+  .feature h3 { font-size: 16.5px; font-weight: 650; margin: 0 0 7px; }
+  .feature p { margin: 0; font-size: 14.5px; color: var(--ink-3); }
+  .feature code {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: .86em; background: var(--bg-soft); border: 1px solid var(--line-2);
+    padding: 1px 5px; border-radius: 5px; color: var(--ink-2);
   }
 
-  /* Style showcase */
-  .styles-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
+  /* Screenshots gallery (masonry via columns) */
+  .gallery { columns: 2; column-gap: 24px; }
+  .card {
+    break-inside: avoid; margin: 0 0 24px;
+    border-radius: var(--radius); border: 1px solid var(--line-2);
+    background: #fff; box-shadow: var(--shadow-sm); overflow: hidden;
   }
-  .style-card {
-    padding: 32px 28px;
-    border-radius: 14px;
-    border: 1px solid var(--slate-200);
-    background: #FFFFFF;
-  }
-  .style-card .label {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--muted);
-    margin-bottom: 16px;
-  }
-  .style-card .body-mock {
-    margin-top: 16px;
-    height: 6px;
-    border-radius: 3px;
-    background: #F1F0EE;
-  }
-  .style-card .body-mock.short { width: 70%; margin-top: 10px; }
+  .card img { width: 100%; border-bottom: 1px solid var(--line); }
+  .card .cap { padding: 14px 18px; font-size: 14px; color: var(--ink-3); }
+  .card .cap b { color: var(--ink); font-weight: 600; }
+  @media (max-width: 760px) { .gallery { columns: 1; } }
 
-  /* Code block */
-  .code-block {
-    background: var(--slate-900);
-    color: #E5E7EB;
-    border-radius: 12px;
-    padding: 22px 24px;
-    font-family: ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, monospace;
-    font-size: 14px;
-    line-height: 1.6;
-    overflow-x: auto;
+  /* Developers code */
+  .code {
+    background: var(--slate-900); color: #E5E7EB; border-radius: var(--radius);
+    padding: 24px 26px; font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 13.5px; line-height: 1.7; overflow-x: auto; box-shadow: var(--shadow-lg);
   }
-  .code-block .comment { color: #94A3B8; }
-  .code-block .key     { color: var(--green-400); }
-  .code-block .str     { color: #FCD34D; }
-
-  .install-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 28px;
-    margin-bottom: 40px;
-  }
-  .step-card {
-    padding: 28px;
-    border-radius: 14px;
-    background: #FFFFFF;
-    border: 1px solid var(--slate-200);
-  }
-  .step-card h3 { margin: 0 0 12px; color: var(--slate-900); font-size: 18px; }
-  .step-card ol { padding-left: 18px; margin: 0; color: var(--muted); }
-  .step-card li { margin-bottom: 6px; }
+  .code .c { color: #8B97A7; }
+  .code .k { color: #34D399; }
+  .code .s { color: #FCD34D; }
 
   /* Footer */
-  footer {
-    background: var(--slate-900);
-    color: var(--slate-300);
-    padding: 48px 0;
-    font-size: 14px;
-  }
-  footer .row {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 24px;
-    align-items: center;
-  }
-  footer a { color: var(--green-400); }
-  footer .links { display: flex; gap: 24px; flex-wrap: wrap; }
+  footer { border-top: 1px solid var(--line); padding: 40px 0; background: #fff; }
+  .foot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 18px; }
+  .foot .brand b { font-size: 14.5px; }
+  .foot .links { display: flex; gap: 22px; flex-wrap: wrap; font-size: 14px; }
+  .foot .links a { color: var(--ink-2); }
+  .foot .copy { font-size: 13px; color: var(--ink-3); width: 100%; }
 
-  @media (max-width: 800px) {
-    .hero { padding: 64px 0 56px; }
-    .hero-row { grid-template-columns: 120px 1fr; gap: 28px; }
-    .hero-icon { width: 120px; height: 120px; border-radius: 24px; }
-    .hero-icon img { width: 120px; height: 120px; }
-    h1.wordmark .brand { font-size: 40px; }
-    h1.wordmark .accent { font-size: 28px; }
-    .hero p.tagline { font-size: 17px; }
+  @media (max-width: 720px) {
+    .hero { padding: 56px 0 44px; }
+    .hero h1 { font-size: 40px; letter-spacing: -1px; }
+    .hero .sub { font-size: 17px; }
     h2 { font-size: 28px; }
-    .features, .styles-grid, .install-grid { grid-template-columns: 1fr; }
+    .features { grid-template-columns: 1fr; }
+    section { padding: 64px 0; }
   }
 </style>
 </head>
 <body>
 
-<header class="hero">
-  <div class="container hero-row">
-    <div class="hero-icon"><img src="{{ '/assets/apple-touch-icon.png' | relative_url }}" alt=""></div>
-    <div>
-      <h1 class="wordmark"><span class="brand">Optic</span><span class="accent">Read-O-Meter</span></h1>
-      <p class="tagline">A clean, customisable reading-time badge for WordPress single posts. Five styles, your colours, your wording, no tracking.</p>
-      <div class="badges-demo">
-        <span class="demo-pill">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          3 min read
-        </span>
-        <span class="demo-pill outline">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          About 5 minutes
-        </span>
-        <span class="demo-pill dark">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-          7 min read
-        </span>
-      </div>
-      <div class="cta-row">
-        <a class="btn btn-primary" href="https://wordpress.org/plugins/optic-read-o-meter/">Get from WordPress.org</a>
-        <a class="btn btn-secondary" href="https://github.com/iamarunbrahma/optic-read-o-meter">View on GitHub</a>
-      </div>
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top">
+      <img src="{{ '/assets/icon-256.png' | relative_url }}" alt="Optic Read-O-Meter logo">
+      <b>Optic Read-O-Meter</b>
+    </a>
+    <div class="nav-links">
+      <a class="hide-sm" href="#features">Features</a>
+      <a class="hide-sm" href="#screenshots">Screenshots</a>
+      <a class="hide-sm" href="#developers">Developers</a>
+      <a class="nav-cta" href="https://wordpress.org/plugins/optic-read-o-meter/">Get the plugin</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <span class="eyebrow">WordPress plugin</span>
+    <h1>A reading-time badge that <span class="grad">fits your theme.</span></h1>
+    <p class="sub">Counts the words, divides by reading speed, and prepends a quiet &ldquo;X min read&rdquo; above your posts. Your style, your colours, your wording, no tracking.</p>
+
+    <div class="pills">
+      <span class="pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        3 min read
+      </span>
+      <span class="pill outline">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        About 5 minutes
+      </span>
+      <span class="pill dark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 010 8h-1"/><path d="M3 8h14v9a4 4 0 01-4 4H7a4 4 0 01-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
+        7 min read
+      </span>
+    </div>
+
+    <div class="cta">
+      <a class="btn btn-primary" href="https://wordpress.org/plugins/optic-read-o-meter/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Get the plugin
+      </a>
+      <a class="btn btn-ghost" href="https://github.com/iamarunbrahma/optic-read-o-meter">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12a11.5 11.5 0 008 11c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7 0-.7 0-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2 0-.4-.5-1.6.2-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 016 0C17 4.6 18 4.9 18 4.9c.7 1.6.2 2.8.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6a11.5 11.5 0 008-11C23.5 5.7 18.3.5 12 .5z"/></svg>
+        View on GitHub
+      </a>
+    </div>
+    <p class="tryline">Prefer to try first? Launch the <a href="https://wordpress.org/plugins/optic-read-o-meter/">live in-browser preview &#8599;</a></p>
+
+    <div class="shot-hero">
+      <img src="{{ '/assets/screenshot-1.png' | relative_url }}" alt="The reading-time badge above a published post">
     </div>
   </div>
 </header>
 
-<section class="body-section">
-  <div class="container">
-    <h2>What it does, in one sentence.</h2>
-    <p class="lede">Counts the words in a post, divides by reading speed, and prepends a small &ldquo;3 min read&rdquo; badge above the content. That&rsquo;s the whole plugin.</p>
-
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow">Everything you need</span>
+      <h2>Small plugin, thoughtful details.</h2>
+      <p>One settings page, a live preview, and sensible defaults. It works the moment you activate it.</p>
+    </div>
     <div class="features">
       <div class="feature">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
         <h3>Zero configuration</h3>
         <p>Activate and your single posts get a tasteful badge above the content. Done.</p>
       </div>
       <div class="feature">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
-        <h3>Five styles included</h3>
-        <p>Pill, minimal, dark, outline, or no styling at all. Switch with one dropdown.</p>
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="12" height="6" rx="2"/></svg></div>
+        <h3>Five styles, four icons</h3>
+        <p>Pill, minimal, dark, outline, or none. Clock, coffee, book, or none. One dropdown each.</p>
       </div>
       <div class="feature">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="13" r="3"/><path d="M19 11l3 3-3 3"/><path d="M5 13l-3-3 3-3"/></svg></div>
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="13" r="2.5"/><circle cx="8.5" cy="14.5" r="2.5"/><circle cx="6.5" cy="8" r="2.5"/></svg></div>
         <h3>Your colours</h3>
-        <p>Two WordPress color pickers for text and background. Hex codes accepted.</p>
+        <p>Two colour pickers plus seven one-click palettes: Emerald, Sky, Rose, Amber, Violet, Slate, Dark.</p>
       </div>
       <div class="feature">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 4 20 4 20 8"/><line x1="14" y1="10" x2="20" y2="4"/><polyline points="20 16 20 20 16 20"/><line x1="14" y1="14" x2="20" y2="20"/><polyline points="8 20 4 20 4 16"/><line x1="10" y1="14" x2="4" y2="20"/><polyline points="4 8 4 4 8 4"/><line x1="10" y1="10" x2="4" y2="4"/></svg></div>
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg></div>
         <h3>Your wording</h3>
-        <p>&ldquo;3 min read&rdquo;, &ldquo;About 5 minutes&rdquo;, or whatever you like. Custom template field.</p>
+        <p>&ldquo;3 min read&rdquo;, &ldquo;About 5 minutes&rdquo;, whatever you like. Separate singular and plural templates.</p>
       </div>
       <div class="feature">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
-        <h3>Shortcode + filters</h3>
-        <p>Use <code>[optrom_reading_time]</code> anywhere. Hook <code>optrom_words_per_minute</code> and <code>optrom_label</code> for full control.</p>
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+        <h3>Block, shortcode, filters</h3>
+        <p>A Gutenberg block, the <code>[optrom_reading_time]</code> shortcode, and two PHP filters for full control.</p>
       </div>
       <div class="feature">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4-8-12a8 8 0 0116 0c0 8-8 12-8 12z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4-8-12a8 8 0 0116 0c0 8-8 12-8 12z"/><circle cx="12" cy="10" r="3"/></svg></div>
         <h3>No tracking, no CDN</h3>
-        <p>No external HTTP, no third-party libraries, no analytics. Plain PHP and CSS.</p>
+        <p>No external HTTP, no third-party libraries, no analytics. Counts cache on save, then read one integer.</p>
       </div>
     </div>
   </div>
 </section>
 
-<section class="body-section alt">
-  <div class="container">
-    <h2>Five styles, two-click switch.</h2>
-    <p class="lede">Match the badge to your theme without writing a line of CSS.</p>
-
-    <div class="styles-grid">
-      <div class="style-card">
-        <p class="label">Pill</p>
-        <span class="demo-pill" style="font-size:14px;">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          3 min read
-        </span>
-        <div class="body-mock"></div>
-        <div class="body-mock short"></div>
+<section class="soft" id="screenshots">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow">See it in action</span>
+      <h2>From the post to the settings.</h2>
+      <p>The same little badge readers already know, with a configurator that stays out of your way.</p>
+    </div>
+    <div class="gallery">
+      <div class="card">
+        <img src="{{ '/assets/screenshot-1.png' | relative_url }}" alt="Reading-time badge above a post">
+        <p class="cap"><b>On the post.</b> The badge above your content, Pill style with the Clock icon.</p>
       </div>
-      <div class="style-card">
-        <p class="label">Minimal</p>
-        <span style="display:inline-flex;align-items:center;gap:8px;color:#4B5563;font-size:14px;opacity:.85;">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 010 8h-1"/><path d="M3 8h14v9a4 4 0 01-4 4H7a4 4 0 01-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
-          About 5 minutes
-        </span>
-        <div class="body-mock"></div>
-        <div class="body-mock short"></div>
+      <div class="card">
+        <img src="{{ '/assets/screenshot-3.png' | relative_url }}" alt="Appearance options: styles, icons, palettes">
+        <p class="cap"><b>Make it yours.</b> Badge style, icon, and seven one-click colour palettes.</p>
       </div>
-      <div class="style-card">
-        <p class="label">Dark</p>
-        <span style="display:inline-flex;align-items:center;gap:8px;background:#1F2937;color:#F8FAFC;padding:9px 16px;border-radius:6px;font-size:14px;font-weight:500;">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-          7 min read
-        </span>
-        <div class="body-mock"></div>
-        <div class="body-mock short"></div>
+      <div class="card">
+        <img src="{{ '/assets/screenshot-2.png' | relative_url }}" alt="The full settings screen with live preview">
+        <p class="cap"><b>Every option on one screen.</b> Reading speed, display, appearance, and wording, with a live preview pinned to the top.</p>
       </div>
-      <div class="style-card">
-        <p class="label">Outline</p>
-        <span style="display:inline-flex;align-items:center;gap:8px;border:1px solid #047857;color:#047857;padding:8px 16px;border-radius:6px;font-size:14px;font-weight:500;">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          2 min read
-        </span>
-        <div class="body-mock"></div>
-        <div class="body-mock short"></div>
+      <div class="card">
+        <img src="{{ '/assets/screenshot-4.png' | relative_url }}" alt="The Reading Time block in the editor">
+        <p class="cap"><b>A native block.</b> Drop the Reading Time block anywhere, as a styled badge or plain text.</p>
+      </div>
+      <div class="card">
+        <img src="{{ '/assets/screenshot-6.png' | relative_url }}" alt="The shortcode rendered inline">
+        <p class="cap"><b>Anywhere you need it.</b> The <code style="font-family:ui-monospace,Menlo,monospace;font-size:.92em;">[optrom_reading_time]</code> shortcode, used inline.</p>
+      </div>
+      <div class="card">
+        <img src="{{ '/assets/screenshot-5.png' | relative_url }}" alt="A dark-style badge with a coffee icon">
+        <p class="cap"><b>A different look.</b> Dark style with the Coffee icon, on the very same post.</p>
       </div>
     </div>
   </div>
 </section>
 
-<section class="body-section">
-  <div class="container">
-    <h2>Get it in under a minute.</h2>
-    <p class="lede">Two ways. Pick whichever you have hands on.</p>
-
-    <div class="install-grid">
-      <div class="step-card">
-        <h3>From WordPress.org</h3>
-        <ol>
-          <li>Go to <strong>Plugins &rarr; Add New</strong>.</li>
-          <li>Search for <em>Optic Read-O-Meter</em>.</li>
-          <li>Click <strong>Install</strong>, then <strong>Activate</strong>.</li>
-          <li>Visit <strong>Settings &rarr; Optic Read-O-Meter</strong> if you want to tweak.</li>
-        </ol>
-      </div>
-      <div class="step-card">
-        <h3>Manual zip</h3>
-        <ol>
-          <li>Download the latest <code>optic-read-o-meter.zip</code>.</li>
-          <li>WordPress &rarr; <strong>Plugins &rarr; Add New &rarr; Upload Plugin</strong>.</li>
-          <li>Pick the zip, click <strong>Install Now</strong>.</li>
-          <li>Activate. Done.</li>
-        </ol>
-      </div>
+<section id="developers">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">For developers</span>
+      <h2>A shortcode and two filters.</h2>
+      <p>Everything you need to ship reading time anywhere, and bend it to your own rules.</p>
     </div>
-  </div>
-</section>
-
-<section class="body-section alt">
-  <div class="container">
-    <h2>For developers.</h2>
-    <p class="lede">Two filters and a shortcode, all you need to ship reading time anywhere.</p>
-
-    <pre class="code-block">
-<span class="comment">// Render the label as text:</span>
+    <pre class="code"><span class="c">// Render the label as text:</span>
 [optrom_reading_time]
 
-<span class="comment">// Render the styled badge:</span>
-[optrom_reading_time <span class="key">format</span>=<span class="str">"badge"</span>]
+<span class="c">// Render the styled badge:</span>
+[optrom_reading_time <span class="k">format</span>=<span class="s">"badge"</span>]
 
-<span class="comment">// Custom template (the %s becomes the minute count):</span>
-[optrom_reading_time <span class="key">template</span>=<span class="str">"About %s"</span>]
+<span class="c">// Custom template (%s becomes the minute count):</span>
+[optrom_reading_time <span class="k">template</span>=<span class="s">"About %s"</span>]
 
-<span class="comment">// PHP filter: change reading speed for technical posts:</span>
-add_filter( <span class="str">'optrom_words_per_minute'</span>, <span class="key">function</span>( $wpm, $post ) {
-  <span class="key">return</span> has_category( <span class="str">'technical'</span>, $post ) ? 150 : $wpm;
+<span class="c">// Change reading speed for technical posts:</span>
+add_filter( <span class="s">'optrom_words_per_minute'</span>, <span class="k">function</span>( $wpm, $post ) {
+  <span class="k">return</span> has_category( <span class="s">'technical'</span>, $post ) ? 150 : $wpm;
 }, 10, 2 );
 
-<span class="comment">// PHP filter: replace the entire label string:</span>
-add_filter( <span class="str">'optrom_label'</span>, <span class="key">function</span>( $label, $minutes, $post ) {
-  <span class="key">return</span> sprintf( <span class="str">'☕ %d min read'</span>, $minutes );
-}, 10, 3 );
-    </pre>
+<span class="c">// Replace the entire label string:</span>
+add_filter( <span class="s">'optrom_label'</span>, <span class="k">function</span>( $label, $minutes, $post ) {
+  <span class="k">return</span> sprintf( <span class="s">'&#9749; %d min read'</span>, $minutes );
+}, 10, 3 );</pre>
   </div>
 </section>
 
 <footer>
-  <div class="container row">
-    <div>
-      &copy; 2026 Arun Brahma &middot; Released under <a href="https://www.gnu.org/licenses/gpl-2.0.html">GPLv2 or later</a>.
-    </div>
+  <div class="wrap foot">
+    <a class="brand" href="#top">
+      <img src="{{ '/assets/icon-256.png' | relative_url }}" alt="" style="width:26px;height:26px;border-radius:7px;">
+      <b style="color:var(--ink);font-weight:700;">Optic Read-O-Meter</b>
+    </a>
     <div class="links">
       <a href="https://wordpress.org/plugins/optic-read-o-meter/">WordPress.org</a>
       <a href="https://github.com/iamarunbrahma/optic-read-o-meter">GitHub</a>
       <a href="https://arunbrahma.com">arunbrahma.com</a>
     </div>
+    <div class="copy">&copy; 2026 Arun Brahma &middot; Released under <a href="https://www.gnu.org/licenses/gpl-2.0.html">GPLv2 or later</a>.</div>
   </div>
 </footer>
 
